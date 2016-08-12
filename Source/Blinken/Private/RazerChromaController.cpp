@@ -107,7 +107,9 @@ void FRazerChromaController::ShutdownModule()
 	if (bChromaSDKEnabled)
 	{
 		bChromaSDKEnabled = false;
+#if PLATFORM_WINDOWS
 		UnInit();
+#endif
 	}
 }
 
