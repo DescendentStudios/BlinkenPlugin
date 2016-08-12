@@ -13,4 +13,5 @@ UBlinkenBPLibrary::UBlinkenBPLibrary(const FObjectInitializer& ObjectInitializer
 void UBlinkenBPLibrary::SetGlobalColor(FColor color)
 {
 	FRazerChromaController::Get()->SetGlobalColor(color);
+	FLogitechGLEDController::Get()->SetGlobalColor(color);
 }
