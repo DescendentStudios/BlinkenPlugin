@@ -14,4 +14,5 @@ void UBlinkenBPLibrary::SetGlobalColor(FColor color)
 {
 	FRazerChromaController::Get()->SetGlobalColor(color);
 	FLogitechGLEDController::Get()->SetGlobalColor(color);
+	FAlienFXController::Get()->SetGlobalColor(color);
 }

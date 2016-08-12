@@ -35,31 +35,14 @@ FRazerChromaController* FRazerChromaController::Get()
 }
 
 FRazerChromaController::FRazerChromaController()
-{
-	bChromaSDKEnabled = false;
-
-#if PLATFORM_WINDOWS
-	Init = nullptr;
-	CreateEffect = nullptr;
-	CreateKeyboardEffect = nullptr;
-	CreateMouseEffect = nullptr;
-	CreateHeadsetEffect = nullptr;
-	CreateMousepadEffect = nullptr;
-	CreateKeypadEffect = nullptr;
-	SetEffect = nullptr;
-	DeleteEffect = nullptr;
-	QueryDevice = nullptr;
-	UnInit = nullptr;
-#endif
+{	
 }
 
 void FRazerChromaController::StartupModule()
 {
 #if PLATFORM_WINDOWS
-	HMODULE ChromaSDKModule = nullptr;
-
-	ChromaSDKModule = LoadLibrary(CHROMASDKDLL);
-	if (ChromaSDKModule == NULL)
+	hLibrary = LoadLibrary(CHROMASDKDLL);
+	if (hLibrary == NULL)
 	{
 		return;
 	}
@@ -67,60 +50,61 @@ void FRazerChromaController::StartupModule()
 	// GetProcAddress will throw 4191 because it's an unsafe type cast, but I almost know what I'm doing here
 #pragma warning(disable: 4191)
 	RZRESULT Result = RZRESULT_INVALID;
-	Init = (INIT)GetProcAddress(ChromaSDKModule, "Init");
-	CreateEffect = (CREATEEFFECT)GetProcAddress(ChromaSDKModule, "CreateEffect");
-	CreateKeyboardEffect = (CREATEKEYBOARDEFFECT)GetProcAddress(ChromaSDKModule, "CreateKeyboardEffect");
-	CreateMouseEffect = (CREATEMOUSEEFFECT)GetProcAddress(ChromaSDKModule, "CreateMouseEffect");
-	CreateHeadsetEffect = (CREATEHEADSETEFFECT)GetProcAddress(ChromaSDKModule, "CreateHeadsetEffect");
-	CreateMousepadEffect = (CREATEMOUSEPADEFFECT)GetProcAddress(ChromaSDKModule, "CreateMousepadEffect");
-	CreateKeypadEffect = (CREATEKEYPADEFFECT)GetProcAddress(ChromaSDKModule, "CreateKeypadEffect");
-	SetEffect = (SETEFFECT)GetProcAddress(ChromaSDKModule, "SetEffect");
-	DeleteEffect = (DELETEEFFECT)GetProcAddress(ChromaSDKModule, "DeleteEffect");
-	QueryDevice = (QUERYDEVICE)GetProcAddress(ChromaSDKModule, "QueryDevice");
-	UnInit = (UNINIT)GetProcAddress(ChromaSDKModule, "UnInit");
-	if (Init)
+	Init = (INIT)GetProcAddress(hLibrary, "Init");
+	QueryDevice = (QUERYDEVICE)GetProcAddress(hLibrary, "QueryDevice");
+	UnInit = (UNINIT)GetProcAddress(hLibrary, "UnInit");
+
+	CreateKeyboardEffect = (CREATEKEYBOARDEFFECT)GetProcAddress(hLibrary, "CreateKeyboardEffect");
+	CreateMouseEffect = (CREATEMOUSEEFFECT)GetProcAddress(hLibrary, "CreateMouseEffect");
+	CreateHeadsetEffect = (CREATEHEADSETEFFECT)GetProcAddress(hLibrary, "CreateHeadsetEffect");
+	CreateMousepadEffect = (CREATEMOUSEPADEFFECT)GetProcAddress(hLibrary, "CreateMousepadEffect");
+	CreateKeypadEffect = (CREATEKEYPADEFFECT)GetProcAddress(hLibrary, "CreateKeypadEffect");
+
+	CreateEffect = (CREATEEFFECT)GetProcAddress(hLibrary, "CreateEffect");
+	SetEffect = (SETEFFECT)GetProcAddress(hLibrary, "SetEffect");
+	DeleteEffect = (DELETEEFFECT)GetProcAddress(hLibrary, "DeleteEffect");
+#pragma warning(default: 4191)
+
+	if (Init && UnInit && QueryDevice &&
+		CreateKeyboardEffect && CreateMouseEffect && CreateHeadsetEffect && CreateMousepadEffect && CreateKeypadEffect &&
+		CreateEffect && SetEffect && DeleteEffect && QueryDevice)
 	{
 		Result = Init();
 		if (Result == RZRESULT_SUCCESS)
 		{
-			if (CreateEffect &&
-				CreateKeyboardEffect &&
-				CreateMouseEffect &&
-				CreateHeadsetEffect &&
-				CreateMousepadEffect &&
-				CreateKeypadEffect &&
-				SetEffect &&
-				DeleteEffect &&
-				QueryDevice &&
-				UnInit)
-			{
-				bChromaSDKEnabled = true;
-			}
+			bEnabled = true;
 		}
 	}
-#pragma warning(default: 4191)
 #endif
 }
 
 void FRazerChromaController::ShutdownModule()
 {
-	if (bChromaSDKEnabled)
+	if (bEnabled)
 	{
-		bChromaSDKEnabled = false;
+		bEnabled = false;
 #if PLATFORM_WINDOWS
 		UnInit();
 #endif
 	}
+
+#if PLATFORM_WINDOWS
+	if (hLibrary)
+	{
+		FreeLibrary(hLibrary);
+		hLibrary = nullptr;
+	}
+#endif
 }
 
 void FRazerChromaController::SetGlobalColor(const FColor color)
 {
-	if (!bChromaSDKEnabled)
+	if (!bEnabled)
 	{
 		return;
 	}
 
-	const uint32 myColor = RAZERRGB(color.R, color.G, color.B);
+	const uint32 myColor = toRazerRGB(color);
 
 #if PLATFORM_WINDOWS
 
@@ -147,4 +131,9 @@ void FRazerChromaController::SetGlobalColor(const FColor color)
 	MousepadEffect.Color = myColor;
 	Result = CreateMousepadEffect(ChromaSDK::Mousepad::CHROMA_STATIC, &MousepadEffect, NULL);
 #endif
+}
+
+FRazerChromaController::RazerRGB FRazerChromaController::toRazerRGB(const FColor color) const
+{
+	return ((uint32)(((uint8)(color.R) | ((uint16)((uint8)(color.G)) << 8)) | (((uint32)(uint8)(color.B)) << 16)));
 }

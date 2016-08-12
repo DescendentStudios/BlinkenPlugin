@@ -18,6 +18,12 @@ public class Blinken : ModuleRules
 			PublicLibraryPaths.Add( Path.GetFullPath(Path.Combine(ModuleDirectory, "../../ThirdParty/LogitechG/lib", Target.Platform.ToString()) ) );
 			PublicAdditionalLibraries.Add("LogitechLEDLib.lib");
 			PublicIncludePaths.Add( Path.GetFullPath(Path.Combine(ModuleDirectory, "../../ThirdParty/LogitechG/inc") ) );
+			
+			// AlienFX SDK
+			PublicIncludePaths.Add( Path.GetFullPath(Path.Combine(ModuleDirectory, "../../ThirdParty/AlienFXSDK/includes") ) );
+			RuntimeDependencies.Add(
+				new RuntimeDependency(Path.Combine(ModuleDirectory, "../../ThirdParty/AlienFXSDK/dll", Target.Platform.ToString(), "LightFX.dll"))
+				);
 		}
 	}
 }

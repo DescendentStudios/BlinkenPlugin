@@ -13,7 +13,7 @@ public:
 	void SetGlobalColor(const FColor color);
 
 protected:
-	bool bEnabled;
+	bool bEnabled = false;
 
 protected:
 	static FLogitechGLEDController* Singleton;
@@ -22,6 +22,6 @@ public:
 	static FLogitechGLEDController* Get();
 
 protected:
-	void toRGBpercent(FColor color, int &red, int &green, int &blue);
-	FColor toFColor(int red, int green, int blue);
+	void toRGBpercent(const FColor color, int &red, int &green, int &blue) const;
+	FColor toFColor(const int red, const int green, const int blue) const;
 };

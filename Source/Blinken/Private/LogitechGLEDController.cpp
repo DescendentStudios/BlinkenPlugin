@@ -26,7 +26,6 @@ FLogitechGLEDController* FLogitechGLEDController::Get()
 
 FLogitechGLEDController::FLogitechGLEDController()
 {
-	bEnabled = false;
 }
 
 void FLogitechGLEDController::StartupModule()
@@ -63,17 +62,17 @@ void FLogitechGLEDController::SetGlobalColor(const FColor color)
 #endif
 }
 
-void FLogitechGLEDController::toRGBpercent(FColor color, int &red, int &green, int &blue)
+void FLogitechGLEDController::toRGBpercent(const FColor color, int &red, int &green, int &blue) const
 {
 	red = (int)((color.R / 255.0f) * 100);
 	green = (int)((color.G / 255.0f) * 100);
 	blue = (int)((color.B / 255.0f) * 100);
 }
 
-FColor FLogitechGLEDController::toFColor(int red, int green, int blue)
+FColor FLogitechGLEDController::toFColor(const int red, const int green, const int blue) const
 {
-	red = (int)((red / 100.0f) * 255);
-	green = (int)((green / 100.0f) * 255);
-	blue = (int)((blue / 100.0f) * 255);
-	return FColor(red, green, blue);
+	const int newRed = (int)((red / 100.0f) * 255);
+	const int newGreen = (int)((green / 100.0f) * 255);
+	const int newBlue = (int)((blue / 100.0f) * 255);
+	return FColor(newRed, newGreen, newBlue);
 }

@@ -13,21 +13,6 @@
 class FRazerChromaController
 {
 public:
-
-#define RAZERRGB(r,g,b)          ((uint32)(((uint8)(r)|((uint16)((uint8)(g))<<8))|(((uint32)(uint8)(b))<<16)))
-
-	const uint32 BLACK = RAZERRGB(0, 0, 0);
-	const uint32 WHITE = RAZERRGB(255, 255, 255);
-	const uint32 RED = RAZERRGB(255, 0, 0);
-	const uint32 GREEN = RAZERRGB(0, 255, 0);
-	const uint32 BLUE = RAZERRGB(0, 0, 255);
-	const uint32 YELLOW = RAZERRGB(255, 255, 0);
-	const uint32 PURPLE = RAZERRGB(128, 0, 128);
-	const uint32 CYAN = RAZERRGB(0, 255, 255);
-	const uint32 ORANGE = RAZERRGB(255, 165, 00);
-	const uint32 PINK = RAZERRGB(255, 192, 203);
-	const uint32 GREY = RAZERRGB(125, 125, 125);
-
 	FRazerChromaController();
 
 	void StartupModule();
@@ -36,7 +21,15 @@ public:
 	void SetGlobalColor(const FColor color);
 
 protected:
-	bool bChromaSDKEnabled;
+	bool bEnabled = false;
+
+protected:
+	static FRazerChromaController* Singleton;
+
+public:
+	static FRazerChromaController* Get();
+
+protected:
 
 #if PLATFORM_WINDOWS
 	typedef RZRESULT(*INIT)(void);
@@ -53,22 +46,23 @@ protected:
 	typedef RZRESULT(*UNREGISTEREVENTNOTIFICATION)(void);
 	typedef RZRESULT(*QUERYDEVICE)(RZDEVICEID DeviceId, ChromaSDK::DEVICE_INFO_TYPE &DeviceInfo);
 
-	INIT Init;
-	UNINIT UnInit;
-	CREATEEFFECT CreateEffect;
-	CREATEKEYBOARDEFFECT CreateKeyboardEffect;
-	CREATEMOUSEEFFECT CreateMouseEffect;
-	CREATEHEADSETEFFECT CreateHeadsetEffect;
-	CREATEMOUSEPADEFFECT CreateMousepadEffect;
-	CREATEKEYPADEFFECT CreateKeypadEffect;
-	SETEFFECT SetEffect;
-	DELETEEFFECT DeleteEffect;
-	QUERYDEVICE QueryDevice;
+	HMODULE hLibrary = nullptr;
+
+	INIT Init = nullptr;
+	UNINIT UnInit = nullptr;
+	CREATEEFFECT CreateEffect = nullptr;
+	CREATEKEYBOARDEFFECT CreateKeyboardEffect = nullptr;
+	CREATEMOUSEEFFECT CreateMouseEffect = nullptr;
+	CREATEHEADSETEFFECT CreateHeadsetEffect = nullptr;
+	CREATEMOUSEPADEFFECT CreateMousepadEffect = nullptr;
+	CREATEKEYPADEFFECT CreateKeypadEffect = nullptr;
+	SETEFFECT SetEffect = nullptr;
+	DELETEEFFECT DeleteEffect = nullptr;
+	QUERYDEVICE QueryDevice = nullptr;
 #endif
 
-protected:
-	static FRazerChromaController* Singleton;
-
 public:
-	static FRazerChromaController* Get();
+	typedef uint32 RazerRGB;
+
+	RazerRGB toRazerRGB(const FColor color) const;
 };
