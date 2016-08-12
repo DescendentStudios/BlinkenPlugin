@@ -31,7 +31,8 @@ protected:
 #if PLATFORM_WINDOWS
 	typedef unsigned int LFXColorVal;
 
-	HINSTANCE hLibrary = nullptr;
+	//HINSTANCE hLibrary = nullptr;
+	void* hLibrary = nullptr;
 
 	LFX2INITIALIZE initFunction = nullptr;
 	LFX2RELEASE releaseFunction = nullptr;

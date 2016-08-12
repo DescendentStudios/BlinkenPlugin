@@ -26,34 +26,51 @@ void FAlienFXController::StartupModule()
 {	
 #if PLATFORM_WINDOWS
 	// Startup
-	hLibrary = LoadLibrary(_T(LFX_DLL_NAME));
+	
+	// Load DLL
+	const TCHAR* pluginLibPath = TEXT("Blinken/ThirdParty/AlienFXSDK/dll/");
+	FString libraryPath;
 
+	const FString EnginePluginsDir = FPaths::ConvertRelativePathToFull(FPaths::EnginePluginsDir());
+	const FString FullEnginePluginsDir = EnginePluginsDir + pluginLibPath + FPlatformProcess::GetBinariesSubdirectory() + TEXT("/");
+	if (FPaths::DirectoryExists(FullEnginePluginsDir))
+	{
+		libraryPath = FullEnginePluginsDir;
+	}
+	else
+	{
+		const FString PluginsDir = FPaths::ConvertRelativePathToFull(FPaths::GamePluginsDir());
+		libraryPath = PluginsDir + pluginLibPath + FPlatformProcess::GetBinariesSubdirectory() + TEXT("/");
+	}
+	FPlatformProcess::PushDllDirectory(*libraryPath);
+	hLibrary = FPlatformProcess::GetDllHandle(TEXT(LFX_DLL_NAME));
+	FPlatformProcess::PopDllDirectory(*libraryPath);
+
+	// Get function pointers
 	if (hLibrary)
 	{
-		// GetProcAddress will throw 4191 because it's an unsafe type cast, but I almost know what I'm doing here
-#pragma warning(disable: 4191)
-		initFunction = (LFX2INITIALIZE)GetProcAddress(hLibrary, LFX_DLL_INITIALIZE);
-		releaseFunction = (LFX2RELEASE)GetProcAddress(hLibrary, LFX_DLL_RELEASE);
-		versionFunction = (LFX2GETVERSION)GetProcAddress(hLibrary, LFX_DLL_GETVERSION);
+		initFunction = (LFX2INITIALIZE)FPlatformProcess::GetDllExport(hLibrary, TEXT(LFX_DLL_INITIALIZE));
+		releaseFunction = (LFX2RELEASE)FPlatformProcess::GetDllExport(hLibrary, TEXT(LFX_DLL_RELEASE));
+		versionFunction = (LFX2GETVERSION)FPlatformProcess::GetDllExport(hLibrary, TEXT(LFX_DLL_GETVERSION));
 
-		resetFunction = (LFX2RESET)GetProcAddress(hLibrary, LFX_DLL_RESET);
-		updateFunction = (LFX2UPDATE)GetProcAddress(hLibrary, LFX_DLL_UPDATE);
+		resetFunction = (LFX2RESET)FPlatformProcess::GetDllExport(hLibrary, TEXT(LFX_DLL_RESET));
+		updateFunction = (LFX2UPDATE)FPlatformProcess::GetDllExport(hLibrary, TEXT(LFX_DLL_UPDATE));
 
-		getNumDevicesFunction = (LFX2GETNUMDEVICES)GetProcAddress(hLibrary, LFX_DLL_GETNUMDEVICES);
-		getDeviceDescriptionFunction = (LFX2GETDEVDESC)GetProcAddress(hLibrary, LFX_DLL_GETDEVDESC);
+		getNumDevicesFunction = (LFX2GETNUMDEVICES)FPlatformProcess::GetDllExport(hLibrary, TEXT(LFX_DLL_GETNUMDEVICES));
+		getDeviceDescriptionFunction = (LFX2GETDEVDESC)FPlatformProcess::GetDllExport(hLibrary, TEXT(LFX_DLL_GETDEVDESC));
 
-		getNumLightsFunction = (LFX2GETNUMLIGHTS)GetProcAddress(hLibrary, LFX_DLL_GETNUMLIGHTS);
-		setLightColorFunction = (LFX2SETLIGHTCOL)GetProcAddress(hLibrary, LFX_DLL_SETLIGHTCOL);
-		getLightColorFunction = (LFX2GETLIGHTCOL)GetProcAddress(hLibrary, LFX_DLL_GETLIGHTCOL);
-		getLightDescriptionFunction = (LFX2GETLIGHTDESC)GetProcAddress(hLibrary, LFX_DLL_GETLIGHTDESC);
+		getNumLightsFunction = (LFX2GETNUMLIGHTS)FPlatformProcess::GetDllExport(hLibrary, TEXT(LFX_DLL_GETNUMLIGHTS));
+		setLightColorFunction = (LFX2SETLIGHTCOL)FPlatformProcess::GetDllExport(hLibrary, TEXT(LFX_DLL_SETLIGHTCOL));
+		getLightColorFunction = (LFX2GETLIGHTCOL)FPlatformProcess::GetDllExport(hLibrary, TEXT(LFX_DLL_GETLIGHTCOL));
+		getLightDescriptionFunction = (LFX2GETLIGHTDESC)FPlatformProcess::GetDllExport(hLibrary, TEXT(LFX_DLL_GETLIGHTDESC));
 
-		lightFunction = (LFX2LIGHT)GetProcAddress(hLibrary, LFX_DLL_LIGHT);
-		lightActionColorFunction = (LFX2ACTIONCOLOR)GetProcAddress(hLibrary, LFX_DLL_ACTIONCOLOR);
-		lightActionColorExFunction = (LFX2ACTIONCOLOREX)GetProcAddress(hLibrary, LFX_DLL_ACTIONCOLOREX);
-		setTiming = (LFX2SETTIMING)GetProcAddress(hLibrary, LFX_DLL_SETTIMING);
-#pragma warning(default: 4191)
+		lightFunction = (LFX2LIGHT)FPlatformProcess::GetDllExport(hLibrary, TEXT(LFX_DLL_LIGHT));
+		lightActionColorFunction = (LFX2ACTIONCOLOR)FPlatformProcess::GetDllExport(hLibrary, TEXT(LFX_DLL_ACTIONCOLOR));
+		lightActionColorExFunction = (LFX2ACTIONCOLOREX)FPlatformProcess::GetDllExport(hLibrary, TEXT(LFX_DLL_ACTIONCOLOREX));
+		setTiming = (LFX2SETTIMING)FPlatformProcess::GetDllExport(hLibrary, TEXT(LFX_DLL_SETTIMING));
 	}
 
+	// init library
 	if (initFunction && releaseFunction && versionFunction &&
 		resetFunction && updateFunction && 
 		getNumDevicesFunction && getDeviceDescriptionFunction &&
@@ -86,7 +103,7 @@ void FAlienFXController::ShutdownModule()
 #if PLATFORM_WINDOWS
 	if (hLibrary)
 	{
-		FreeLibrary(hLibrary);
+		FPlatformProcess::FreeDllHandle(hLibrary);
 		hLibrary = nullptr;
 	}
 #endif
