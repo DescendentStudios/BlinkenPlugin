@@ -16,3 +16,10 @@ void UBlinkenBPLibrary::SetGlobalColor(FColor color)
 	FLogitechGLEDController::Get()->SetGlobalColor(color);
 	FAlienFXController::Get()->SetGlobalColor(color);
 }
+
+void UBlinkenBPLibrary::FlashColor(FColor color, int durationMS)
+{
+	// TODO FRazerChromaController::Get()->FlashColor(color, durationMS);
+	FLogitechGLEDController::Get()->FlashColor(color, durationMS);
+	// TODO FAlienFXController::Get()->FlashColor(color, durationMS);
+}

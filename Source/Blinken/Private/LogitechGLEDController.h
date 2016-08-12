@@ -11,6 +11,7 @@ public:
 	void ShutdownModule();
 
 	void SetGlobalColor(const FColor color);
+	void FlashColor(FColor color, int durationMS);
 
 protected:
 	bool bEnabled = false;

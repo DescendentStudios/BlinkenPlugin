@@ -62,6 +62,21 @@ void FLogitechGLEDController::SetGlobalColor(const FColor color)
 #endif
 }
 
+void FLogitechGLEDController::FlashColor(FColor color, int durationMS)
+{
+	if (!bEnabled)
+	{
+		return;
+	}
+	int redPercentage = 0;
+	int greenPercentage = 0;
+	int bluePercentage = 0;
+	toRGBpercent(color, redPercentage, greenPercentage, bluePercentage);
+#if PLATFORM_WINDOWS
+	LogiLedFlashLighting(redPercentage, greenPercentage, bluePercentage, durationMS, durationMS);
+#endif
+}
+
 void FLogitechGLEDController::toRGBpercent(const FColor color, int &red, int &green, int &blue) const
 {
 	red = (int)((color.R / 255.0f) * 100);
