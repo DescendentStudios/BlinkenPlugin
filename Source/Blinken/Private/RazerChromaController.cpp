@@ -47,7 +47,7 @@ void FRazerChromaController::StartupModule()
 		return;
 	}
 
-	// GetProcAddress will throw 4191 because it's an unsafe type cast, but I almost know what I'm doing here
+	// GetProcAddress will throw 4191 because it's an unsafe type cast
 #pragma warning(disable: 4191)
 	RZRESULT Result = RZRESULT_INVALID;
 	Init = (INIT)GetProcAddress(hLibrary, "Init");
@@ -97,13 +97,8 @@ void FRazerChromaController::ShutdownModule()
 #endif
 }
 
-void FRazerChromaController::SetGlobalColor(const FColor color)
+void FRazerChromaController::SetCurrentColor(const FColor color)
 {
-	if (!bEnabled)
-	{
-		return;
-	}
-
 	const uint32 myColor = toRazerRGB(color);
 
 #if PLATFORM_WINDOWS

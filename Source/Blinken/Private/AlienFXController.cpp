@@ -109,7 +109,7 @@ void FAlienFXController::ShutdownModule()
 #endif
 }
 
-void FAlienFXController::SetGlobalColor(const FColor color)
+void FAlienFXController::SetCurrentColor(const FColor color)
 {
 	if (!bEnabled)
 	{

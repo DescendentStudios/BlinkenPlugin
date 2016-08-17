@@ -24,7 +24,7 @@ FLogitechGLEDController* FLogitechGLEDController::Get()
 	return Singleton;
 }
 
-FLogitechGLEDController::FLogitechGLEDController()
+FLogitechGLEDController::FLogitechGLEDController() : FBaseController()
 {
 }
 
@@ -46,7 +46,7 @@ void FLogitechGLEDController::ShutdownModule()
 	}
 }
 
-void FLogitechGLEDController::SetGlobalColor(const FColor color)
+void FLogitechGLEDController::SetCurrentColor(const FColor color)
 {
 	if (!bEnabled)
 	{
@@ -62,19 +62,27 @@ void FLogitechGLEDController::SetGlobalColor(const FColor color)
 #endif
 }
 
-void FLogitechGLEDController::FlashColor(FColor color, int durationMS)
+void FLogitechGLEDController::FlashColor(FColor color, float duration)
 {
 	if (!bEnabled)
 	{
 		return;
 	}
+
 	int redPercentage = 0;
 	int greenPercentage = 0;
 	int bluePercentage = 0;
 	toRGBpercent(color, redPercentage, greenPercentage, bluePercentage);
+
+	int durationMS = duration * 1000;
+
 #if PLATFORM_WINDOWS
 	LogiLedFlashLighting(redPercentage, greenPercentage, bluePercentage, durationMS, durationMS);
 #endif
+}
+
+void FLogitechGLEDController::Tick(float DeltaTime)
+{
 }
 
 void FLogitechGLEDController::toRGBpercent(const FColor color, int &red, int &green, int &blue) const

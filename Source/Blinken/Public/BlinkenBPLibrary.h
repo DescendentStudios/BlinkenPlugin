@@ -31,5 +31,5 @@ class UBlinkenBPLibrary : public UBlueprintFunctionLibrary
 	static void SetGlobalColor(FColor color);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Flash Color", Keywords = "Blinken Razer Chroma Logitech AlienFX Alienware flash color"), Category = "Blinken")
-	static void FlashColor(FColor color, int durationMS);
+	static void FlashColor(FColor color, float duration);
 };

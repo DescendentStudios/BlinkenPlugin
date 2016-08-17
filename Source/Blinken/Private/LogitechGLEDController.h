@@ -2,19 +2,20 @@
 
 #include "EngineMinimal.h"
 
-class FLogitechGLEDController
+class FLogitechGLEDController : public FBaseController
 {
 public:
 	FLogitechGLEDController();
 
-	void StartupModule();
-	void ShutdownModule();
+	virtual void StartupModule() override;
+	virtual void ShutdownModule() override;
 
-	void SetGlobalColor(const FColor color);
-	void FlashColor(FColor color, int durationMS);
+	virtual void Tick(float DeltaTime) override;
+
+	virtual void FlashColor(FColor color, float duration) override;
 
 protected:
-	bool bEnabled = false;
+	virtual void SetCurrentColor(const FColor color) override;
 
 protected:
 	static FLogitechGLEDController* Singleton;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EngineMinimal.h"
+#include "DirectController.h"
 
 #if PLATFORM_WINDOWS
 #include "AllowWindowsPlatformTypes.h"
@@ -10,18 +11,16 @@
 #include "HideWindowsPlatformTypes.h"
 #endif
 
-class FRazerChromaController
+class FRazerChromaController : public FDirectController
 {
 public:
 	FRazerChromaController();
 
-	void StartupModule();
-	void ShutdownModule();
-
-	void SetGlobalColor(const FColor color);
+	virtual void StartupModule() override;
+	virtual void ShutdownModule() override;
 
 protected:
-	bool bEnabled = false;
+	virtual void SetCurrentColor(const FColor color) override;
 
 protected:
 	static FRazerChromaController* Singleton;
@@ -61,7 +60,7 @@ protected:
 	QUERYDEVICE QueryDevice = nullptr;
 #endif
 
-public:
+protected:
 	typedef uint32 RazerRGB;
 
 	RazerRGB toRazerRGB(const FColor color) const;

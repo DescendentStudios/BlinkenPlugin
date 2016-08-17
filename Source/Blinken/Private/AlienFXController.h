@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EngineMinimal.h"
+#include "DirectController.h"
 
 #if PLATFORM_WINDOWS
 #include "AllowWindowsPlatformTypes.h"
@@ -8,18 +9,16 @@
 #include "HideWindowsPlatformTypes.h"
 #endif
 
-class FAlienFXController
+class FAlienFXController : public FDirectController
 {
 public:
 	FAlienFXController();
 
-	void StartupModule();
-	void ShutdownModule();
-
-	void SetGlobalColor(const FColor color);
+	virtual void StartupModule() override;
+	virtual void ShutdownModule() override;
 
 protected:
-	bool bEnabled = false;
+	virtual void SetCurrentColor(const FColor color) override;
 
 protected:
 	static FAlienFXController* Singleton;
