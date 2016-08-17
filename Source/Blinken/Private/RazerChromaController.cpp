@@ -120,6 +120,7 @@ void FRazerChromaController::SetCurrentColor(const FColor color)
 
 	ChromaSDK::Mouse::STATIC_EFFECT_TYPE MouseEffect = {};
 	MouseEffect.Color = myColor;
+	MouseEffect.LEDId = RZLED_ALL;
 	Result = CreateMouseEffect(ChromaSDK::Mouse::CHROMA_STATIC, &MouseEffect, NULL);
 
 	ChromaSDK::Mousepad::STATIC_EFFECT_TYPE MousepadEffect = {};
