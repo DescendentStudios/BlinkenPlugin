@@ -3,6 +3,8 @@
 #include "BlinkenPrivatePCH.h"
 #include "DirectController.h"
 
+#define CHANGE_FREQUENCY 0.05f
+
 FDirectController::FDirectController() : FBaseController()
 {	
 }
@@ -45,7 +47,7 @@ void FDirectController::Tick(float DeltaTime)
 
 	accumulatedTime += DeltaTime;
 
-	if (accumulatedTime < 0.1f)
+	if (accumulatedTime < CHANGE_FREQUENCY)
 	{
 		return;
 	}
@@ -54,10 +56,23 @@ void FDirectController::Tick(float DeltaTime)
 	{
 		float progressToGlobalColor = 1.0f - (targetTimeLeft / targetDuration);
 		FColor currentColor;
+
+		/*
 		currentColor.R = FMath::Lerp(targetColor.R, globalColor.R, progressToGlobalColor);
 		currentColor.G = FMath::Lerp(targetColor.G, globalColor.G, progressToGlobalColor);
 		currentColor.B = FMath::Lerp(targetColor.B, globalColor.B, progressToGlobalColor);
+		*/
 
+		/*
+		currentColor.R = FMath::InterpEaseIn(targetColor.R, globalColor.R, progressToGlobalColor, 0.5);
+		currentColor.G = FMath::InterpEaseIn(targetColor.G, globalColor.G, progressToGlobalColor, 0.5);
+		currentColor.B = FMath::InterpEaseIn(targetColor.B, globalColor.B, progressToGlobalColor, 0.5);
+		*/
+		
+		currentColor.R = FMath::InterpEaseOut(targetColor.R, globalColor.R, progressToGlobalColor, 0.2);
+		currentColor.G = FMath::InterpEaseOut(targetColor.G, globalColor.G, progressToGlobalColor, 0.2);
+		currentColor.B = FMath::InterpEaseOut(targetColor.B, globalColor.B, progressToGlobalColor, 0.2);
+		
 		targetTimeLeft -= accumulatedTime;
 
 		if (targetTimeLeft <= 0.0f)

@@ -106,26 +106,77 @@ void FRazerChromaController::SetCurrentColor(const FColor color)
 	// Might need to check that this isn't already set
 	RZRESULT Result = RZRESULT_INVALID;
 
+	// headset
+
 	ChromaSDK::Headset::STATIC_EFFECT_TYPE HeadsetEffect = {};
 	HeadsetEffect.Color = myColor;
 	Result = CreateHeadsetEffect(ChromaSDK::Headset::CHROMA_STATIC, &HeadsetEffect, NULL);
 
+	// keyboard
+
+	/*
 	ChromaSDK::Keyboard::STATIC_EFFECT_TYPE KeyboardEffect = {};
 	KeyboardEffect.Color = myColor;
 	Result = CreateKeyboardEffect(ChromaSDK::Keyboard::CHROMA_STATIC, &KeyboardEffect, NULL);
+	*/
 
+	ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE KeyboardEffect = {};
+	for (size_t row = 0; row<ChromaSDK::Keyboard::MAX_ROW; row++)
+	{
+		for (size_t col = 0; col<ChromaSDK::Keyboard::MAX_COLUMN; col++)
+		{
+			KeyboardEffect.Color[row][col] = myColor;
+		}
+	}
+
+	CreateKeyboardEffect(ChromaSDK::Keyboard::CHROMA_CUSTOM, &KeyboardEffect, NULL);
+
+	// keypad
+
+	/*
 	ChromaSDK::Keypad::STATIC_EFFECT_TYPE KeypadEffect = {};
 	KeypadEffect.Color = myColor;
 	Result = CreateKeypadEffect(ChromaSDK::Keypad::CHROMA_STATIC, &KeypadEffect, NULL);
+	*/
 
+	ChromaSDK::Keypad::CUSTOM_EFFECT_TYPE KeypadEffect = {};
+
+	for (size_t i = 0; i<ChromaSDK::Keypad::MAX_ROW; i++)
+	{
+		for (size_t j = 0; j<ChromaSDK::Keypad::MAX_COLUMN; j++)
+		{
+			KeypadEffect.Color[i][j] = myColor;
+		}
+	}
+
+	CreateKeypadEffect(ChromaSDK::Keypad::CHROMA_CUSTOM, &KeypadEffect, NULL);
+
+	// mouse
+	
+	/*
 	ChromaSDK::Mouse::STATIC_EFFECT_TYPE MouseEffect = {};
 	MouseEffect.Color = myColor;
 	MouseEffect.LEDId = RZLED_ALL;
 	Result = CreateMouseEffect(ChromaSDK::Mouse::CHROMA_STATIC, &MouseEffect, NULL);
+	*/
+
+	ChromaSDK::Mouse::CUSTOM_EFFECT_TYPE2 MouseEffect = {};
+	for (int i = 0; i<Mouse::MAX_ROW; i++)
+	{
+		for (int j = 0; j<Mouse::MAX_COLUMN; j++)
+		{
+			MouseEffect.Color[i][j] = myColor;
+		}
+	}
+
+	CreateMouseEffect(ChromaSDK::Mouse::CHROMA_CUSTOM2, &MouseEffect, NULL);
+
+	// mousepad
 
 	ChromaSDK::Mousepad::STATIC_EFFECT_TYPE MousepadEffect = {};
 	MousepadEffect.Color = myColor;
 	Result = CreateMousepadEffect(ChromaSDK::Mousepad::CHROMA_STATIC, &MousepadEffect, NULL);
+
 #endif
 }
 
