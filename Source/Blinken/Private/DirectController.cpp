@@ -35,7 +35,8 @@ void FDirectController::FlashColor(FColor color, float duration)
 	targetTimeLeft = duration;
 	targetDuration = duration;
 
-	// Tick() takes care of actually setting the appropriate color
+	// Tick() takes care of actually setting the appropriate color over time, but go ahead and do the first set now
+	ProcessFlash();
 }
 
 void FDirectController::Tick(float DeltaTime)
@@ -54,34 +55,39 @@ void FDirectController::Tick(float DeltaTime)
 
 	if (targetTimeLeft > 0.0f)
 	{
-		float progressToGlobalColor = 1.0f - (targetTimeLeft / targetDuration);
-		FColor currentColor;
-
-		/*
-		currentColor.R = FMath::Lerp(targetColor.R, globalColor.R, progressToGlobalColor);
-		currentColor.G = FMath::Lerp(targetColor.G, globalColor.G, progressToGlobalColor);
-		currentColor.B = FMath::Lerp(targetColor.B, globalColor.B, progressToGlobalColor);
-		*/
-
-		/*
-		currentColor.R = FMath::InterpEaseIn(targetColor.R, globalColor.R, progressToGlobalColor, 0.5);
-		currentColor.G = FMath::InterpEaseIn(targetColor.G, globalColor.G, progressToGlobalColor, 0.5);
-		currentColor.B = FMath::InterpEaseIn(targetColor.B, globalColor.B, progressToGlobalColor, 0.5);
-		*/
-		
-		currentColor.R = FMath::InterpEaseOut(targetColor.R, globalColor.R, progressToGlobalColor, 0.2);
-		currentColor.G = FMath::InterpEaseOut(targetColor.G, globalColor.G, progressToGlobalColor, 0.2);
-		currentColor.B = FMath::InterpEaseOut(targetColor.B, globalColor.B, progressToGlobalColor, 0.2);
-		
-		targetTimeLeft -= accumulatedTime;
-
-		if (targetTimeLeft <= 0.0f)
-		{
-			currentColor = globalColor;
-		}
-
-		SetCurrentColor(currentColor);
+		ProcessFlash(accumulatedTime);
 	}
 
 	accumulatedTime = 0.0f;
+}
+
+void FDirectController::ProcessFlash(const float deltaTime)
+{
+	float progressToGlobalColor = 1.0f - (targetTimeLeft / targetDuration);
+	FColor currentColor;
+
+	/*
+	currentColor.R = FMath::Lerp(targetColor.R, globalColor.R, progressToGlobalColor);
+	currentColor.G = FMath::Lerp(targetColor.G, globalColor.G, progressToGlobalColor);
+	currentColor.B = FMath::Lerp(targetColor.B, globalColor.B, progressToGlobalColor);
+	*/
+
+	/*
+	currentColor.R = FMath::InterpEaseIn(targetColor.R, globalColor.R, progressToGlobalColor, 0.5);
+	currentColor.G = FMath::InterpEaseIn(targetColor.G, globalColor.G, progressToGlobalColor, 0.5);
+	currentColor.B = FMath::InterpEaseIn(targetColor.B, globalColor.B, progressToGlobalColor, 0.5);
+	*/
+
+	currentColor.R = FMath::InterpEaseOut(targetColor.R, globalColor.R, progressToGlobalColor, 0.4);
+	currentColor.G = FMath::InterpEaseOut(targetColor.G, globalColor.G, progressToGlobalColor, 0.4);
+	currentColor.B = FMath::InterpEaseOut(targetColor.B, globalColor.B, progressToGlobalColor, 0.4);
+
+	targetTimeLeft -= deltaTime;
+
+	if (targetTimeLeft <= 0.0f)
+	{
+		currentColor = globalColor;
+	}
+
+	SetCurrentColor(currentColor);
 }

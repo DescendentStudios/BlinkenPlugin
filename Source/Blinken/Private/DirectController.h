@@ -18,4 +18,7 @@ protected:
 	FColor targetColor;
 	float targetTimeLeft = 0.0f;
 	float targetDuration = 0.0f;
+
+protected:
+	void ProcessFlash(const float deltaTime = 0.0f);
 };
