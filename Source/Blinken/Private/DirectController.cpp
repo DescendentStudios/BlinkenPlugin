@@ -66,6 +66,12 @@ void FDirectController::ProcessFlash(const float deltaTime)
 	float progressToGlobalColor = 1.0f - (targetTimeLeft / targetDuration);
 	FColor currentColor;
 
+#ifdef BLINKEN_RGB	
+	// transition color in RGB color space
+	currentColor.R = FMath::InterpEaseOut(targetColor.R, globalColor.R, progressToGlobalColor, 0.4);
+	currentColor.G = FMath::InterpEaseOut(targetColor.G, globalColor.G, progressToGlobalColor, 0.4);
+	currentColor.B = FMath::InterpEaseOut(targetColor.B, globalColor.B, progressToGlobalColor, 0.4);
+
 	/*
 	currentColor.R = FMath::Lerp(targetColor.R, globalColor.R, progressToGlobalColor);
 	currentColor.G = FMath::Lerp(targetColor.G, globalColor.G, progressToGlobalColor);
@@ -77,10 +83,14 @@ void FDirectController::ProcessFlash(const float deltaTime)
 	currentColor.G = FMath::InterpEaseIn(targetColor.G, globalColor.G, progressToGlobalColor, 0.5);
 	currentColor.B = FMath::InterpEaseIn(targetColor.B, globalColor.B, progressToGlobalColor, 0.5);
 	*/
-
-	currentColor.R = FMath::InterpEaseOut(targetColor.R, globalColor.R, progressToGlobalColor, 0.4);
-	currentColor.G = FMath::InterpEaseOut(targetColor.G, globalColor.G, progressToGlobalColor, 0.4);
-	currentColor.B = FMath::InterpEaseOut(targetColor.B, globalColor.B, progressToGlobalColor, 0.4);
+#else
+	// use HSV via FLinearColor for better color transition than RGB
+	FLinearColor targetLinearColor(targetColor);
+	FLinearColor globalLinearColor(globalColor);
+	float const ModifiedAlpha = 1.f - FMath::Pow(1.f - progressToGlobalColor /*Alpha*/, 0.4 /*Exp*/);
+	FLinearColor currentLinearColor = FLinearColor::LerpUsingHSV(targetLinearColor, globalLinearColor, ModifiedAlpha);
+	currentColor = currentLinearColor.ToFColor(true);		
+#endif
 
 	targetTimeLeft -= deltaTime;
 
