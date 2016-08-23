@@ -27,6 +27,12 @@ class UBlinkenBPLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_UCLASS_BODY()
 
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Enable", Keywords = "Blinken Razer Chroma Logitech AlienFX Alienware set global color"), Category = "Blinken")
+	static void Enable(bool value = true);
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Is Enabled", Keywords = "Blinken Razer Chroma Logitech AlienFX Alienware set global color"), Category = "Blinken")
+	static bool IsEnabled();
+
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Set Global Color", Keywords = "Blinken Razer Chroma Logitech AlienFX Alienware set global color"), Category = "Blinken")
 	static void SetGlobalColor(FColor color);
 

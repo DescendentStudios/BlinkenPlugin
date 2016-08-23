@@ -103,6 +103,9 @@ void FRazerChromaController::SetCurrentColor(const FColor color)
 
 #if PLATFORM_WINDOWS
 
+	// simple API method from SDK docs frequently do not work (commented out below), use methods from SDK sample code instead
+	// see file:///C:/Temp/razer-chroma-sdk/docs/_chroma_s_d_k_impl_8cpp-example.html
+
 	// Might need to check that this isn't already set
 	RZRESULT Result = RZRESULT_INVALID;
 
