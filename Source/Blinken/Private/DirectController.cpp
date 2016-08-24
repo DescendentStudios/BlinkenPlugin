@@ -88,7 +88,7 @@ void FDirectController::ProcessFlash(const float deltaTime)
 	FLinearColor targetLinearColor(targetColor);
 	FLinearColor globalLinearColor(globalColor);
 	// do equivalent of FMath::InterpEaseOut()
-	float const ModifiedAlpha = 1.f - FMath::Pow(1.f - progressToGlobalColor /*Alpha*/, 0.025 /*Exp*/);
+	float const ModifiedAlpha = 1.f - FMath::Pow(1.f - progressToGlobalColor /*Alpha*/, 0.0125 /*Exp*/);
 	FLinearColor currentLinearColor = FLinearColor::LerpUsingHSV(targetLinearColor, globalLinearColor, ModifiedAlpha);
 	currentColor = currentLinearColor.ToFColor(true);	
 #endif
