@@ -89,8 +89,10 @@ void FDirectController::ProcessFlash(const float deltaTime)
 	FLinearColor globalLinearColor(globalColor);
 	float const ModifiedAlpha = 1.f - FMath::Pow(1.f - progressToGlobalColor /*Alpha*/, 0.4 /*Exp*/);
 	FLinearColor currentLinearColor = FLinearColor::LerpUsingHSV(targetLinearColor, globalLinearColor, ModifiedAlpha);
-	currentColor = currentLinearColor.ToFColor(true);		
+	currentColor = currentLinearColor.ToFColor(true);	
 #endif
+
+	currentColor.A = 255; // in case an API uses A for brightness
 
 	targetTimeLeft -= deltaTime;
 
