@@ -87,7 +87,8 @@ void FDirectController::ProcessFlash(const float deltaTime)
 	// use HSV via FLinearColor for better color transition than RGB
 	FLinearColor targetLinearColor(targetColor);
 	FLinearColor globalLinearColor(globalColor);
-	float const ModifiedAlpha = 1.f - FMath::Pow(1.f - progressToGlobalColor /*Alpha*/, 0.4 /*Exp*/);
+	// do equivalent of FMath::InterpEaseOut()
+	float const ModifiedAlpha = 1.f - FMath::Pow(1.f - progressToGlobalColor /*Alpha*/, 0.025 /*Exp*/);
 	FLinearColor currentLinearColor = FLinearColor::LerpUsingHSV(targetLinearColor, globalLinearColor, ModifiedAlpha);
 	currentColor = currentLinearColor.ToFColor(true);	
 #endif
