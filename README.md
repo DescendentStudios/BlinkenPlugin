@@ -16,7 +16,7 @@ See the LICENSE file for license for all files, except for files in the ThirdPar
 
 # Blueprint functions
 
-# Blinken BP Library
+## Blinken BP Library
 
 1. void UBlinkenBPLibrary::Enable(bool value)
    * Enable or disable Blinken lighting.  Defaults to enabled.
@@ -26,3 +26,11 @@ See the LICENSE file for license for all files, except for files in the ThirdPar
    * Sets all accessory lighting to FColor color (RGB) and assigns the color as the global color
 4. void UBlinkenBPLibrary::FlashColor(FColor color, float duration)
    * Flashes FColor color on all accessory lighting for duration seconds, and returns to the global color set via SetGlobalColor() afterward
+
+# TODO
+
+1. Allow access to vendor SDK specific features
+2. Set individual key lighting on devices which support it, perhaps with layers where removing layer X lighting will return the keys to the previous layer's colors
+3. Add support for more hardware via more SDKs.  Examples:
+   1. Roccat Talk FX (tho it seems to also support Alien FX): http://www.roccat.org/en-US/Products/Gaming-Software/Talk-FX/
+
