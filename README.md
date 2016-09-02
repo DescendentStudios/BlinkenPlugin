@@ -29,8 +29,9 @@ See the LICENSE file for license for all files, except for files in the ThirdPar
 
 # TODO
 
-1. Allow access to vendor SDK specific features
+1. Set colors on individual sevices
 2. Set individual key lighting on devices which support it, perhaps with layers where removing layer X lighting will return the keys to the previous layer's colors
-3. Add support for more hardware via more SDKs.  Examples:
+3. Allow access to vendor SDK specific features - perhaps via interfaces obtainable that map directly to each SDK 
+4. Add support for more hardware via more SDKs.  Examples:
    1. Roccat Talk FX (tho it seems to also support Alien FX): http://www.roccat.org/en-US/Products/Gaming-Software/Talk-FX/
 
