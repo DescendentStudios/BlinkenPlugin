@@ -1,0 +1,25 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "Blinken",
+	"Description": "Control input device and accessory light effects (like Razer Chroma) from Blueprint",
+	"Category": "Input",
+	"CreatedBy": "Jason Spangler",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"EnabledByDefault": false,
+	"CanContainContent": false,
+	"IsBetaVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "Blinken",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms" : [ "Win32", "Win64", "Linux", "Mac" ]
+		}
+	]
+}
