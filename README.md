@@ -29,7 +29,7 @@ See the LICENSE file for license for all files, except for files in the ThirdPar
 
 # TODO
 
-1. Set colors on individual sevices
+1. Set colors on individual devices independently
 2. Set individual key lighting on devices which support it, perhaps with layers where removing layer X lighting will return the keys to the previous layer's colors
 3. Allow access to vendor SDK specific features - perhaps via interfaces obtainable that map directly to each SDK 
 4. Add support for more hardware via more SDKs.  Examples:
